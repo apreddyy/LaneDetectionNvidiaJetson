@@ -1,22 +1,9 @@
-/*
- * Student License - for use by students to meet course requirements and
- * perform academic research at degree granting institutions only.  Not
- * for government, commercial, or other organizational use.
- *
- * processedout_emxAPI.cpp
- *
- * Code generation for function 'processedout_emxAPI'
- *
- */
-
-/* Include files */
 #include <stdlib.h>
 #include "rt_nonfinite.h"
 #include "processedout.h"
 #include "processedout_emxAPI.h"
 #include "processedout_emxutil.h"
 
-/* Function Definitions */
 emxArray_uint8_T *emxCreateND_uint8_T(int b_numDimensions, int *b_size)
 {
   emxArray_uint8_T *emx;
@@ -108,5 +95,3 @@ void emxInitArray_uint8_T(emxArray_uint8_T **pEmxArray, int b_numDimensions)
 {
   emxInit_uint8_T(pEmxArray, b_numDimensions);
 }
-
-/* End of code generation (processedout_emxAPI.cpp) */

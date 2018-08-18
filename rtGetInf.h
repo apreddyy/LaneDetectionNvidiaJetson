@@ -1,14 +1,3 @@
-/*
- * Student License - for use by students to meet course requirements and
- * perform academic research at degree granting institutions only.  Not
- * for government, commercial, or other organizational use.
- *
- * rtGetInf.h
- *
- * Code generation for function 'processedout'
- *
- */
-
 #ifndef RTGETINF_H
 #define RTGETINF_H
 #include <stddef.h>
@@ -21,5 +10,3 @@ extern real_T rtGetMinusInf(void);
 extern real32_T rtGetMinusInfF(void);
 
 #endif
-
-/* End of code generation (rtGetInf.h) */

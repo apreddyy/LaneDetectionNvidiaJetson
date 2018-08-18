@@ -1,22 +1,9 @@
-/*
- * Student License - for use by students to meet course requirements and
- * perform academic research at degree granting institutions only.  Not
- * for government, commercial, or other organizational use.
- *
- * processedout_emxutil.cpp
- *
- * Code generation for function 'processedout_emxutil'
- *
- */
-
-/* Include files */
 #include <stdlib.h>
 #include <string.h>
 #include "rt_nonfinite.h"
 #include "processedout.h"
 #include "processedout_emxutil.h"
 
-/* Function Definitions */
 void emxEnsureCapacity_boolean_T(emxArray_boolean_T *emxArray, int oldNumel)
 {
   int newNumel;
@@ -417,5 +404,3 @@ void emxInit_uint8_T(emxArray_uint8_T **pEmxArray, int b_numDimensions)
     emxArray->size[i] = 0;
   }
 }
-
-/* End of code generation (processedout_emxutil.cpp) */

@@ -1,14 +1,3 @@
-/*
- * Student License - for use by students to meet course requirements and
- * perform academic research at degree granting institutions only.  Not
- * for government, commercial, or other organizational use.
- *
- * rt_nonfinite.h
- *
- * Code generation for function 'processedout'
- *
- */
-
 #ifndef RT_NONFINITE_H
 #define RT_NONFINITE_H
 #include <stddef.h>
@@ -27,5 +16,3 @@ extern boolean_T rtIsNaN(real_T value);
 extern boolean_T rtIsNaNF(real32_T value);
 
 #endif
-
-/* End of code generation (rt_nonfinite.h) */

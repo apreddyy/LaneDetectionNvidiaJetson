@@ -1,12 +1,20 @@
+//#####################################################################################//
+//#####################################################################################//
+//#####################################################################################//
+//# Please include the Github Repositories web URL if you are using this material.    #//
+//#####################################################################################//
+//#####################################################################################//
+//#####################################################################################//
+
+
+
 #include "opencv2/opencv.hpp"
 #include <iostream>
 #include "opencv2/cudaarithm.hpp"
-#include "opencv2/cudacodec.hpp"
 #include "opencv2/cudaimgproc.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include <opencv2/core/core.hpp>
-#include "opencv2/objdetect.hpp"
 #include <cmath>
 #include <stddef.h>
 #include <stdlib.h>
@@ -16,48 +24,47 @@
 #include "processedout.h"
 #include "processedout_emxAPI.h"
 #include "processedout_types.h"
-#include "processa.h"
-#include "processb.h"
-#include "LaneLogic/ADVANCELANE/LaneLogic_grt_rtw/LaneLogic.h"
+#include "processedout_initialize.h"
+#include "all_header.h"
+#include "constants.h"
+
 
 
 using namespace std;
 using namespace cv;
 
 
-
-void processinga_frame(cuda::GpuMat& src, cuda::GpuMat& resize, cuda::GpuMat& dst);
-void processingb_frame(Mat& frame, cuda::GpuMat& src, double PointsA[720], double PointsB[720], int AlertSide, double center_data[], cuda::GpuMat& dst);
-
-
-/*void processinga_frame(Mat& src, Mat& resize, Mat& dst);
-void processingb_frame(Mat& frame, Mat& src, double PointsA[720], double PointsB[720], int AlertSide, double center_data[], Mat& dst);*/
-
-
 int main(int, const char * const[])
 {
-	setenv("DISPLAY", ":0", 0);
-	VideoCapture cap("openv.mp4");
+	
+	VideoCapture cap("openv.avi");
 	if (!cap.isOpened())
 	{
 		cout << "Error opening video stream or file" << endl;
 		return -1;
 	}
+	Mat mapa, mapb;
+	int do_calib = False;
+	calibration_on(do_calib);
+	Mat intrinsicn = Mat(3, 3, CV_32FC1);
+	Mat distCoeffsn =  Mat(3, 3, CV_32FC1);;
+	cv::FileStorage fs2("calibration.yml", cv::FileStorage::READ);
+	fs2["intrinsic"] >> intrinsicn;
+	fs2["distCoeffs"] >> distCoeffsn;
+	initUndistortRectifyMap(intrinsicn, distCoeffsn, cv::Mat::eye(3, 3, CV_32FC1), intrinsicn, cv::Size(640, 360), CV_32FC1, mapa, mapb);
 	while (1)
 	{
-		Mat frame,  cudaout_frame, frame_out;
-		//Mat process_framein, process_frame, process_frameout, resize_frame;
-		cuda::GpuMat process_framein, process_frame, process_frameout, resize_frame;
+		Mat frame, cudaout_frame, frame_out, undisort_frame;
+		cuda::GpuMat process_frame, process_frameout, resize_frame, process_framein, gpu_mapa, gpu_mapb;
 		int Width;
 		int Height;
 		Width = 640;
 		Height = 360;
-		int AlertSide;
+		double AlertSide;
 		double center_data[1];
 		int center_size[1];
 		double left_curvature;
 		double right_curveature;
-		double curvature;
 		static int iv0[2] = { Height, Width };
 		emxArray_uint8_T   *imageInput;
 		imageInput = emxCreateND_uint8_T(2, *(int(*)[2])&iv0[0]);
@@ -65,15 +72,16 @@ int main(int, const char * const[])
 		imageInputout = emxCreateND_uint8_T(2, *(int(*)[2])&iv0[0]);
 		processedout_initialize();
 		double PointsA[720];
-		double PointsB[720];
-		/*VideoWriter video("/path/test_video.avi", CV_FOURCC('P','I','M','1'), 25, Size(640, 360), true);*/
+		double PointsB[720];		
 		for (;;)
 		{
 			cap >> frame;
 			if (frame.empty())
 				break;
-			process_framein.upload(frame);
-			processinga_frame(process_framein, resize_frame, process_frame);
+			gpu_mapa.upload(mapa);
+			gpu_mapb.upload(mapb);
+			process_framein.upload(frame);			
+			processinga_frame(process_framein, resize_frame, process_frame, gpu_mapa, gpu_mapb);
 			process_frame.download(cudaout_frame);
 			int i, j;
 			for (i = 0; i < Width; i++)
@@ -81,16 +89,7 @@ int main(int, const char * const[])
 					imageInput->data[i*Height+ j] = (uint8_T)cudaout_frame.data[i+ Width * j];
 			processedout(imageInput, PointsA, PointsB, &AlertSide, center_data, center_size, &left_curvature, &right_curveature); 
 			processingb_frame(cudaout_frame, resize_frame, PointsA, PointsB, AlertSide, center_data, process_frameout);
-			LaneLogicModelClass LaneLogicModel;
-			LaneLogicModel.initialize();
-			LaneLogicModel.LaneLogic_U.LeftCurvature = left_curvature;
-			LaneLogicModel.LaneLogic_U.RightCurvature = right_curveature;
-			LaneLogicModel.step();
-			LaneLogicModel.step();
-			curvature = double(LaneLogicModel.LaneLogic_Y.CenterCurvature);
-			cout << left_curvature << ";" << curvature << ";" << right_curveature << endl;
 			process_frameout.download(frame_out);
-			/*video.write(process_frameout);*/
 			imshow("FrameL", frame_out);
 			if (waitKey(10) >= 0)break;				
 		}

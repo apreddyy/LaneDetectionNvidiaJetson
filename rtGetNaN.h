@@ -1,14 +1,3 @@
-/*
- * Student License - for use by students to meet course requirements and
- * perform academic research at degree granting institutions only.  Not
- * for government, commercial, or other organizational use.
- *
- * rtGetNaN.h
- *
- * Code generation for function 'processedout'
- *
- */
-
 #ifndef RTGETNAN_H
 #define RTGETNAN_H
 #include <stddef.h>
@@ -19,5 +8,3 @@ extern real_T rtGetNaN(void);
 extern real32_T rtGetNaNF(void);
 
 #endif
-
-/* End of code generation (rtGetNaN.h) */

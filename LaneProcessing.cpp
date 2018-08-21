@@ -28,7 +28,7 @@
 #include "all_header.h"
 #include "constants.h"
 
-
+bool do_calib;
 
 using namespace std;
 using namespace cv;
@@ -44,8 +44,7 @@ int main(int, const char * const[])
 		return -1;
 	}
 	Mat mapa, mapb;
-	int do_calib = False;
-	calibration_on(do_calib);
+	calibration_on();
 	Mat intrinsicn = Mat(3, 3, CV_32FC1);
 	Mat distCoeffsn =  Mat(3, 3, CV_32FC1);;
 	cv::FileStorage fs2("calibration.yml", cv::FileStorage::READ);

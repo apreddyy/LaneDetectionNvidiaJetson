@@ -27,7 +27,7 @@ using namespace cv;
 
 void resizeframe::resize_frame(cuda::GpuMat& src, cuda::GpuMat& dst)
 {
-	double resize_height = 0.5;
-	double resize_weidght = 0.5;
-	cuda::resize(src, dst, Size(), resize_weidght, resize_height);
+	int resize_height = 360;
+	int resize_weidght = 640;
+	cuda::resize(src, dst, Size(resize_weidght, resize_height));
 }

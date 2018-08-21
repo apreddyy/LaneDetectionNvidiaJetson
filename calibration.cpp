@@ -17,17 +17,20 @@
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/highgui/highgui.hpp"
 #include "all_header.h"
+#include "constants.h"
+
 
 using namespace std;
 using namespace cv;
 
-void calibration_on(int calibration)
+void calibration_on()
 {
-int numBoards = 17;
-int numCornersHor = 9;
-int numCornersVer = 6;
 
-	if (calibration == 1)
+	int numBoards = 17;
+	int numCornersHor = 9;
+	int numCornersVer = 6;
+
+	if (do_calib == true)
 	{
 		int numSquares = numCornersHor * numCornersVer;
 		Size board_sz = Size(numCornersHor, numCornersVer);
@@ -91,30 +94,6 @@ int numCornersVer = 6;
 		fs << "intrinsic" << intrinsic;
 		fs << "distCoeffs" << distCoeffs;
 		fs.release();
-	}
-
-	else
-	{
-		Mat intrinsicn = Mat(3, 3, CV_32FC1);
-		Mat distCoeffsn = Mat(3, 3, CV_32FC1);
-		int num = 17;
-		cv::FileStorage fs2("calibration.yml", cv::FileStorage::READ);
-		fs2["intrinsic"] >> intrinsicn;
-		fs2["distCoeffs"] >> distCoeffsn;
-		fs2.release();
-		Mat image;
-		VideoCapture capt;
-		capt.open("/home/nvidia/Documents/Laneoutput/camera_cal/%02d.jpg");
-		int cntr = 0;
-		Mat imageUndistorted;
-		while (num > cntr)
-		{
-			capt >> image;
-			undistort(image, imageUndistorted, intrinsicn, distCoeffsn);
-			std::string savingName = "/home/nvidia/Documents/Laneoutput/camera_cal/output/" + std::to_string(++cntr) + ".jpg";
-			imwrite(savingName, imageUndistorted);
-			waitKey(1);
-		}
-		capt.release();
+		do_calib = false;
 	}
 }

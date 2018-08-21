@@ -9,16 +9,14 @@
 
 
 #pragma once
-#include <cmath>
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
 #include <iostream>
 
-using namespace std;
-using namespace cv;
 
-int True = 1;
-int False = 0;
+using namespace std;
+
+extern bool do_calib;
 
 

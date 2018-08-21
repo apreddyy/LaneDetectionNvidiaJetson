@@ -24,4 +24,4 @@ using namespace cv;
 
 void processinga_frame(cuda::GpuMat& src, cuda::GpuMat& resize, cuda::GpuMat& dst, cuda::GpuMat& gpu_mapa, cuda::GpuMat& gpu_mapb);
 void processingb_frame(Mat& frame, cuda::GpuMat& src, double PointsA[720], double PointsB[720], double AlertSide, double center_data[], cuda::GpuMat& dst);
-void calibration_on(int calibration);
+void calibration_on();
